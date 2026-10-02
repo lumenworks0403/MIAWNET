@@ -1,0 +1,5 @@
+model:
+  use_mfie: false
+  use_afw: false
+runtime:
+  output: runs/ablations/baseline
