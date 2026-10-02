@@ -1,5 +1,0 @@
-model:
-  use_mfie: false
-  use_afw: true
-runtime:
-  output: runs/ablations/afw
