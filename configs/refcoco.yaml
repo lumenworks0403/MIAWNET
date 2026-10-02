@@ -1,0 +1,4 @@
+data:
+  root: data/refcoco
+runtime:
+  output: runs/refcoco
