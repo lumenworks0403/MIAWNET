@@ -88,7 +88,7 @@ Its two main components combine global and local visual-language features, then 
 | **Multi-scale decoder** | Aggregate visual and semantic features across stages and restore the mask resolution. |
 | **BCE + Dice** | Supervise the final mask with equally weighted pixel-level and region-level objectives. |
 
-MFIE follows equations (1)–(4), AFW follows equations (5)–(7), and the training loss follows equations (8)–(10). Details not specified by the manuscript, including feature widths, pooling sizes, and decoder structure, are documented in [implementation notes](docs/implementation.md).
+MFIE follows equations (1)–(4), AFW follows equations (5)–(7), and the training loss follows equations (8)–(10).
 
 ## Results
 
@@ -137,11 +137,11 @@ Results from Table 3 of the manuscript, described in the text as validation-set 
 | — | ✓ | 74.92 | 73.04 | 75.63 | 66.84 | 30.48 |
 | ✓ | ✓ | **75.88** | **73.59** | **76.97** | **68.32** | **31.02** |
 
-The full model improves mIoU and oIoU over the baseline by 1.42 and 0.86 percentage points, respectively. The code's AFW-only convention is described in [implementation notes](docs/implementation.md).
+The full model improves mIoU and oIoU over the baseline by 1.42 and 0.86 percentage points, respectively.
 
 </details>
 
-These tables reproduce the values reported in the supplied manuscript. Real benchmark training has not been run for this release, and trained checkpoints are not included. [Verification](docs/verification.md) records the code checks performed locally. Evaluation always takes an explicit split manifest because the manuscript uses both validation and test labels for DroneRIS in different sections.
+These tables reproduce the values reported in the supplied manuscript. Real benchmark training has not been run for this release, and trained checkpoints are not included. Evaluation always takes an explicit split manifest because the manuscript uses both validation and test labels for DroneRIS in different sections.
 
 ## Visualizations
 
@@ -196,8 +196,7 @@ On Windows, activate with `.venv\Scripts\Activate.ps1`. The supplied recipe targ
 - Swin-B uses torchvision's ImageNet-1K checkpoint; BERT defaults to `bert-base-uncased`. Both are downloaded on first training use.
 - For offline use, cache the torchvision checkpoint, point `model.bert_name` to a local BERT directory with model and tokenizer files, and set `model.local_files_only: true`.
 - Both encoders are optimized end to end. Mixed precision is disabled by default and can be enabled with `training.amp: true`.
-- [requirements.txt](requirements.txt) provides pinned dependencies for the manuscript's Python 3.10 / PyTorch 2.0 setup and annotation conversion. [Verification](docs/verification.md) describes the different local CPU test environment.
-- [Implementation notes](docs/implementation.md) list the choices made for unspecified details. They must be reconciled with original experimental configurations for an exact reproduction.
+- [requirements.txt](requirements.txt) provides pinned dependencies for the manuscript's Python 3.10 / PyTorch 2.0 setup and annotation conversion.
 
 </details>
 
@@ -240,7 +239,7 @@ python tools/convert_refcoco.py \
   --output data/refcoco
 ```
 
-For RefCOCO+, use its annotation files and `--output data/refcoco_plus`. The converter preserves the official split membership and writes one record per referring expression. See [data preparation](docs/data.md) for details.
+For RefCOCO+, use its annotation files and `--output data/refcoco_plus`. The converter preserves the official split membership and writes one record per referring expression.
 
 </details>
 
@@ -316,7 +315,6 @@ MIAWNet/
 ├── scripts/                   # Linux launch scripts
 ├── tools/                     # Data audit and RefCOCO conversion
 ├── tests/                     # Numerical and integration checks
-├── docs/                      # Data, implementation, usage and verification
 ├── train.py                   # Training entry point
 ├── evaluate.py                # Evaluation entry point
 ├── predict.py                 # Prediction entry point
@@ -346,7 +344,7 @@ ruff format --check src tests train.py evaluate.py predict.py tools
 pytest -q
 ```
 
-Tests use synthetic data and compact injected encoders without pretrained downloads. The GitHub Actions workflow runs the checks on pushes and pull requests. See [verification](docs/verification.md) for the complete-model forward check and local test results.
+Tests use synthetic data and compact injected encoders without pretrained downloads. The GitHub Actions workflow runs the checks on pushes and pull requests.
 
 </details>
 
