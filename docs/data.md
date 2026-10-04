@@ -1,10 +1,48 @@
 # Data preparation
 
+## Download and convert the published archive
+
+Download **[DroneRIS.zip](https://drive.google.com/file/d/1bgE3XX192pZ4l6NpVN2WDiv4olWkADgK/view?usp=sharing)** and extract it into `downloads/DroneRIS/`:
+
+```text
+downloads/DroneRIS/
+├── images/
+│   └── ris_lad/             # 00001.jpg ... 02082.jpg
+└── ris_lad/
+    ├── instances.json
+    └── refs(unc).p
+```
+
+The published archive has 10,851 triplets and 2,082 images, selected from RIS-LAD by category and decoded-mask-size strata. Its 58 visual groups are assigned wholly to train, val or test, with 7,596 / 1,085 / 2,170 triplets respectively. Source text and mask pixels are preserved; image names and IDs are renumbered consistently.
+
+After installing the repository and its annotation-conversion dependencies, run the existing converter from the repository root:
+
+```bash
+python tools/convert_refcoco.py \
+  --refs "downloads/DroneRIS/ris_lad/refs(unc).p" \
+  --instances downloads/DroneRIS/ris_lad/instances.json \
+  --images downloads/DroneRIS/images/ris_lad \
+  --output data/droneris
+```
+
+The converter supports the archive's RefCOCO-style structure and preserves the `train`, `val` and `test` fields. It writes target-mask PNGs and `annotations/train.jsonl`, `annotations/val.jsonl`, and `annotations/test.jsonl`. Image paths point to the extracted original images.
+
+Check this converted release:
+
+```bash
+python tools/check_data.py --root data/droneris \
+  --manifests annotations/train.jsonl annotations/val.jsonl annotations/test.jsonl
+```
+
+Then use the existing training and evaluation commands in the README. Keep the extracted images in place because converted image paths are absolute.
+
+The archive's SHA-256 is `f36bdeab39b227cd3f20df96e89dd99bb0d51e042947f3b621ac7ff5bf5228e1`. Original data credit and usage terms are provided by [RIS-LAD](https://github.com/AHideoKuzeA/RIS-LAD-A-Benchmark-and-Model-for-Referring-Low-Altitude-Drone-Image-Segmentation).
+
 ## DroneRIS
 
 The manuscript describes 10,851 image-expression-mask triplets from CO-Drone videos, with approximately 7:1:2 train/validation/test proportions. Source frames are cropped into 1080 × 1080 patches. The eight categories are people, car, motor, bicycle, tricycle, truck, bus and boat.
 
-Use the original released split lists if available. The ratio alone is insufficient to reconstruct exact sample membership. Different crops or frames from the same source video must remain in one split. Preserve each source video's identifier in `video_id`, then use `miawnet-check-data --require-video-ids` across all three manifests.
+For benchmark files with original source-video metadata, use their original split lists and preserve each source video's identifier in `video_id`, then use `miawnet-check-data --require-video-ids` across all three manifests. The published archive above uses its saved visual-group split assignment. The ratio alone does not specify sample membership.
 
 Annotations are binary masks for the referred instance, paired with the verified referring expression. Multiple expressions for an instance are separate records and may share an image/mask. Each record must have a unique string `id`. This repository consumes verified annotations; the semi-automatic annotation pipeline is not a substitute for the benchmark files.
 
@@ -41,3 +79,4 @@ Training resizes RGB images directly to 480 × 480 and uses nearest-neighbor int
 ## Validation
 
 `miawnet-check-data` verifies record fields, unique IDs within each split, readable files, matching image/mask sizes, binary foreground values, non-empty target masks, and cross-split image/video overlap. Without sequence identifiers, image separation can be checked but video separation cannot be established.
+
