@@ -45,28 +45,9 @@ The manuscript describes **10,851 image–expression–mask triplets** across **
 
 ### Download the dataset
 
-**[Download DroneRIS.zip from Google Drive](https://drive.google.com/file/d/1bgE3XX192pZ4l6NpVN2WDiv4olWkADgK/view?usp=sharing)** — approximately **415 MiB**.
+**[Download DroneRIS.zip from Google Drive](https://drive.google.com/file/d/1bgE3XX192pZ4l6NpVN2WDiv4olWkADgK/view?usp=sharing)**
 
-The downloadable archive is a **RIS-LAD-derived subset** organized according to the dataset scale and properties described above. It contains **10,851 triplets**, **2,082 images** at **1080 × 1080**, and all **eight categories**. Category and decoded-mask-size stratified selection uses seed 42; the released split assigns each of 58 visual scene groups wholly to one set.
-
-| Released split | Triplets | Images |
-| :--- | ---: | ---: |
-| Train | 7,596 | 1,398 |
-| Validation | 1,085 | 219 |
-| Test | 2,170 | 465 |
-| Total | 10,851 | 2,082 |
-
-Images are named `00001.jpg` through `02082.jpg`. Image IDs and annotation references have been updated consistently; texts and mask pixels are preserved. Masks retain their original RLE pixels, with area and bounding boxes recomputed from those pixels. The [image name mapping](image_name_mapping.csv) records the original and released image names.
-
-The archive contains `images/ris_lad/`, `ris_lad/instances.json`, and `ris_lad/refs(unc).p`. Train/validation/test membership is stored in each reference's `split` field. See [data preparation](docs/data.md#download-and-convert-the-published-archive) to convert this layout to the JSONL manifests consumed by MIAWNet.
-
-SHA-256 of `DroneRIS.zip`:
-
-```text
-f36bdeab39b227cd3f20df96e89dd99bb0d51e042947f3b621ac7ff5bf5228e1
-```
-
-The source annotations and images are from [RIS-LAD](https://github.com/AHideoKuzeA/RIS-LAD-A-Benchmark-and-Model-for-Referring-Low-Altitude-Drone-Image-Segmentation). Credit and usage terms from the original data continue to apply.
+This RIS-LAD-derived release contains **10,851 image–expression–mask triplets**, **2,082 images**, and **8 categories**. The train / validation / test splits contain **7,596 / 1,085 / 2,170 triplets**, respectively (approximately 7:1:2).
 
 ## Overview
 
@@ -238,9 +219,7 @@ One JSONL record describes one image–expression pair and the referred instance
 {"id":"video03_frame001_car02","image":"images/video03/frame001.jpg","mask":"masks/video03/frame001_car02.png","text":"The white car next to the bus.","video_id":"video03"}
 ```
 
-For the published `DroneRIS.zip` archive, follow [download and conversion instructions](docs/data.md#download-and-convert-the-published-archive) to generate these manifests and validate the saved splits.
-
-Masks use background 0 and foreground 1 or 255. Image and mask dimensions must match. Paths are relative to `data.root`, or absolute. For data with original source-video identifiers, check masks and source-video separation before training:
+Masks use background 0 and foreground 1 or 255. Image and mask dimensions must match. Paths are relative to `data.root`, or absolute. Check masks and source-video separation before training:
 
 ```bash
 python tools/check_data.py --root data/droneris \
